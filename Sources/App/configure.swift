@@ -9,7 +9,7 @@ public func configure(_ app: Application) async throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     let postgresConfig = SQLPostgresConfiguration(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: Int(Environment.get("DATABASE_PORT")!)!,
+        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? SQLPostgresConfiguration.ianaPortNumber,
         username: Environment.get("DATABASE_USERNAME") ?? "username",
         password: Environment.get("DATABASE_PASSWORD") ?? "password",
         database: Environment.get("DATABASE_NAME") ?? "database",
