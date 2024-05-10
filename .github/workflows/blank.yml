@@ -22,7 +22,7 @@ jobs:
     - name: Build and push to dockerhub
       uses: docker/build-push-action@v5
       with:
-       context: gyms_in_cloud/
+       context: 
        push: true
        tags: kicsipixel/gyms_in_cloud:latest
 
