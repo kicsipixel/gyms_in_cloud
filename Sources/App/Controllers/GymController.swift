@@ -30,14 +30,14 @@ struct GymController: RouteCollection {
     }
     
     // MARK: - Index
-    func index(req: Request) async throws -> [Gym] {
+    @Sendable func index(req: Request) async throws -> [Gym] {
         return try await Gym.query(on: req.db).all()
     }
     
     //
     // For testing purposes, a function, which lists the gyms created by the user
     //
-    func getAllGymByUser(_ req: Request) async throws -> [Gym] {
+    @Sendable func getAllGymByUser(_ req: Request) async throws -> [Gym] {
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
         
@@ -45,7 +45,7 @@ struct GymController: RouteCollection {
     }
     
     // MARK: - Create
-    func create(req: Request) async throws -> Gym {
+    @Sendable func create(req: Request) async throws -> Gym {
         let user = try req.auth.require(User.self)
         let data = try req.content.decode(CreateGymData.self)
         let gym = try Gym(name: data.name, coordinates: data.coordinates, city: data.city, country: data.country, userID: user.requireID())
@@ -55,17 +55,17 @@ struct GymController: RouteCollection {
     }
     
     // MARK: - Show
-    func show(req: Request) async throws -> Gym {
+    @Sendable func show(req: Request) async throws -> Gym {
         guard let gym = try await Gym.find(req.parameters.get("id"), on: req.db) else {
             throw Abort(.notFound)
         }
-                
+        
         return gym
     }
     
     
     // MARK: - Update
-    func update(req: Request) async throws -> Gym {
+    @Sendable func update(req: Request) async throws -> Gym {
         guard let gym = try await Gym.find(req.parameters.get("id"), on: req.db) else {
             throw Abort(.notFound)
         }
@@ -84,7 +84,7 @@ struct GymController: RouteCollection {
     }
     
     // MARK: - Delete
-    func delete(req: Request) async throws -> Gym {
+    @Sendable func delete(req: Request) async throws -> Gym {
         guard let gym = try await Gym.find(req.parameters.get("id"), on: req.db) else {
             throw Abort(.notFound)
         }
@@ -94,11 +94,4 @@ struct GymController: RouteCollection {
         
         return gym
     }
-}
-
-struct CreateGymData: Content {
-    let name: String
-    let coordinates: Coordinates
-    let city: String
-    let country: String
 }
